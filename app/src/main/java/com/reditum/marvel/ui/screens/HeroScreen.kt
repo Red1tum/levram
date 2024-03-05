@@ -22,10 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.reditum.marvel.data.HeroProvider
+import com.reditum.marvel.ui.theme.Sizes.mediumPadding
+import com.reditum.marvel.ui.theme.Sizes.roundedShapeClipping
 
 @Composable
 fun HeroScreen(navController: NavController, heroId: Int) {
@@ -43,7 +44,7 @@ fun HeroScreen(navController: NavController, heroId: Int) {
             modifier = Modifier
                 .statusBarsPadding()
                 .fillMaxSize()
-                .padding(12.dp)
+                .padding(mediumPadding)
         ) {
             IconButton(onClick = navController::navigateUp) {
                 Icon(
@@ -54,9 +55,9 @@ fun HeroScreen(navController: NavController, heroId: Int) {
             Column(
                 modifier = Modifier
                     .safeDrawingPadding()
-                    .clip(RoundedCornerShape(16.dp))
+                    .clip(RoundedCornerShape(roundedShapeClipping))
                     .background(MaterialTheme.colorScheme.primaryContainer)
-                    .padding(12.dp)
+                    .padding(mediumPadding)
             ) {
                 Text(
                     hero.name,

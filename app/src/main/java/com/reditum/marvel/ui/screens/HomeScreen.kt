@@ -22,11 +22,14 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.reditum.marvel.R
 import com.reditum.marvel.data.HeroProvider
 import com.reditum.marvel.ui.components.HeroList
+import com.reditum.marvel.ui.theme.Sizes.listSpacing
+import com.reditum.marvel.ui.theme.Sizes.logoWidth
 import com.reditum.marvel.ui.theme.getNetworkImageColor
 import com.reditum.marvel.ui.theme.getPrimaryColors
 import kotlinx.coroutines.flow.update
@@ -64,16 +67,16 @@ fun HomeScreen(navController: NavController, setColor: (Color) -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(listSpacing)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.marvel_logo),
                 contentDescription = null,
-                modifier = Modifier.width(192.dp)
+                modifier = Modifier.width(logoWidth)
             )
             Text(
                 color = MaterialTheme.colorScheme.onBackground,
-                text = "Choose your hero",
+                text = stringResource(R.string.choose_hero),
                 style = MaterialTheme.typography.titleLarge
             )
             HeroList(

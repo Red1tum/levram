@@ -40,6 +40,10 @@ import com.reditum.marvel.data.Character
 import com.reditum.marvel.data.HeroProvider
 import com.reditum.marvel.ui.theme.DefaultThemeColor
 import com.reditum.marvel.ui.theme.MarvelTheme
+import com.reditum.marvel.ui.theme.Sizes.heroCardWidth
+import com.reditum.marvel.ui.theme.Sizes.listSpacing
+import com.reditum.marvel.ui.theme.Sizes.mediumPadding
+import com.reditum.marvel.ui.theme.Sizes.roundedShapeClipping
 import kotlin.math.abs
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -63,7 +67,7 @@ fun HeroList(
     LazyRow(
         state = state,
         flingBehavior = fling,
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(listSpacing),
         contentPadding = PaddingValues(horizontal = 46.dp),
         modifier = modifier
             .safeDrawingPadding()
@@ -92,7 +96,7 @@ fun HeroList(
             HeroCard(
                 hero = hero,
                 modifier = Modifier
-                    .width(320.dp)
+                    .width(heroCardWidth)
                     .fillMaxSize()
                     .graphicsLayer {
                         scale.also { scale ->
@@ -119,7 +123,7 @@ fun HeroList(
 fun HeroCard(hero: Character, modifier: Modifier = Modifier) {
     Box(
         contentAlignment = Alignment.BottomStart,
-        modifier = modifier.clip(RoundedCornerShape(16.dp))
+        modifier = modifier.clip(RoundedCornerShape(roundedShapeClipping))
     ) {
         AsyncImage(
             model = hero.url,
@@ -134,8 +138,8 @@ fun HeroCard(hero: Character, modifier: Modifier = Modifier) {
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp)
-                .clip(RoundedCornerShape(16.dp))
+                .padding(mediumPadding)
+                .clip(RoundedCornerShape(roundedShapeClipping))
                 .background(hero.colors?.primary ?: Color.Transparent)
         )
     }
