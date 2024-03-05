@@ -10,12 +10,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.reditum.marvel.ui.screens.HeroScreen
 import com.reditum.marvel.ui.screens.HomeScreen
 import com.reditum.marvel.ui.theme.ColorSaver
 import com.reditum.marvel.ui.theme.DefaultThemeColor
@@ -35,29 +35,6 @@ class MainActivity : ComponentActivity() {
                 themeColor = themeColor
             ) {
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MarvelTheme {
-        Greeting("Android")
                     contentColor = MaterialTheme.colorScheme.onBackground,
                     color = MaterialTheme.colorScheme.inversePrimary,
                     modifier = Modifier.fillMaxSize()
@@ -71,6 +48,17 @@ fun GreetingPreview() {
                             HOME
                         ) {
                             HomeScreen(navController, setThemeColor)
+                        }
+                        composable(
+                            "hero/{id}",
+                            arguments = listOf(
+                                navArgument("id") {
+                                    type = NavType.StringType
+                                }
+                            )
+                        ) { backStackEntry ->
+                            val heroId = backStackEntry.arguments?.getString("id")!!.toInt()
+                            HeroScreen(navController, heroId)
                         }
                     }
                 }
