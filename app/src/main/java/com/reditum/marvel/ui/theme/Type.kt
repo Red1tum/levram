@@ -19,7 +19,7 @@ val Typography = Typography(
         fontWeight = FontWeight.Bold,
         fontFamily = libreFonts,
         fontSize = 36.sp,
-        lineHeight = 36.sp,
+        lineHeight = 40.sp,
         letterSpacing = 0.5.sp
     ),
     titleMedium = TextStyle(

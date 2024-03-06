@@ -56,6 +56,7 @@ data class PrimaryColors(
     val primary: Color,
     val onPrimary: Color,
 )
+
 fun getPrimaryColors(color: Color, darkTheme: Boolean = true): PrimaryColors {
     val hct = Hct.fromInt(color.toArgb())
     val hue = hct.hue

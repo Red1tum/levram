@@ -7,10 +7,10 @@ import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -69,9 +69,7 @@ fun HeroList(
         flingBehavior = fling,
         horizontalArrangement = Arrangement.spacedBy(listSpacing),
         contentPadding = PaddingValues(horizontal = 46.dp),
-        modifier = modifier
-            .safeDrawingPadding()
-            .fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
     ) {
         itemsIndexed(heroes) { idx, hero ->
             val scale by remember {
@@ -86,7 +84,7 @@ fun HeroList(
                     // of this scale starts to grow for a little bit
                     // and then, as we continue to scroll, the behavior
                     // becomes normal
-                    val offset = abs(halfRowWidth - currentItem.size) / 4
+                    val offset = abs(halfRowWidth - currentItem.size) / 2
                     (1f - minOf(
                         1f,
                         abs(currentItem.offset + offset + (currentItem.size / 2f) - halfRowWidth) / halfRowWidth
@@ -97,7 +95,7 @@ fun HeroList(
                 hero = hero,
                 modifier = Modifier
                     .width(heroCardWidth)
-                    .fillMaxSize()
+                    .fillMaxHeight()
                     .graphicsLayer {
                         scale.also { scale ->
                             // This seems like the easiest way to change center index

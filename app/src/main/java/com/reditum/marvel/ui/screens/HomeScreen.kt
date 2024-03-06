@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
@@ -23,16 +25,18 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.reditum.marvel.R
 import com.reditum.marvel.data.HeroProvider
 import com.reditum.marvel.ui.components.HeroList
 import com.reditum.marvel.ui.theme.Sizes.listSpacing
 import com.reditum.marvel.ui.theme.Sizes.logoWidth
+import com.reditum.marvel.ui.theme.Sizes.mediumPadding
 import com.reditum.marvel.ui.theme.getNetworkImageColor
 import com.reditum.marvel.ui.theme.getPrimaryColors
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.withContext
 
 @Composable
 fun HomeScreen(navController: NavController, setColor: (Color) -> Unit) {
@@ -41,10 +45,8 @@ fun HomeScreen(navController: NavController, setColor: (Color) -> Unit) {
 
     val isDark = isSystemInDarkTheme()
 
-    // basically checking for null to avoid running
-    // this launched effect on every screen recomposition
-    if (heroes.first().colors == null) {
-        LaunchedEffect(Unit) {
+    LaunchedEffect(isDark) {
+        withContext(Dispatchers.IO) {
             HeroProvider.getHeroes().update {
                 it.map { char ->
                     val color = getNetworkImageColor(context, char.url)
@@ -65,8 +67,7 @@ fun HomeScreen(navController: NavController, setColor: (Color) -> Unit) {
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(listSpacing)
         ) {
             Image(
@@ -77,12 +78,14 @@ fun HomeScreen(navController: NavController, setColor: (Color) -> Unit) {
             Text(
                 color = MaterialTheme.colorScheme.onBackground,
                 text = stringResource(R.string.choose_hero),
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(bottom = mediumPadding)
             )
             HeroList(
                 heroes,
                 onColorChange = setColor,
-                onHeroClicked = { id: Int -> navController.navigate("hero/${id}") }
+                onHeroClicked = { id: Int -> navController.navigate("hero/${id}") },
+                modifier = Modifier.navigationBarsPadding()
             )
         }
     }
