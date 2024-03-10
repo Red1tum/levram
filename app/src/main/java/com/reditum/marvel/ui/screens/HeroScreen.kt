@@ -17,7 +17,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -30,7 +29,7 @@ import com.reditum.marvel.ui.theme.Sizes.roundedShapeClipping
 
 @Composable
 fun HeroScreen(navController: NavController, heroId: Int) {
-    val hero = HeroProvider.getHeroes().collectAsState().value.first { it.id == heroId }
+    val hero = HeroProvider.getHero(heroId)
 
     Box(modifier = Modifier) {
         AsyncImage(

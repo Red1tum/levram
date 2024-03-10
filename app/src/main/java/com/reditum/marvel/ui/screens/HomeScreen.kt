@@ -91,6 +91,8 @@ fun HomeScreen(navController: NavController, setColor: (Color) -> Unit) {
                     modifier = Modifier.navigationBarsPadding()
                 )
             } else {
+                // The first load of app is slow (very optimized api, marvel)
+                // so shimmer was added for user to understand that app is doing some work
                 ShimmerHost {
                     HeroListPlaceholder(Modifier.navigationBarsPadding())
                 }
