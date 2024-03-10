@@ -34,13 +34,13 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.reditum.marvel.data.Character
 import com.reditum.marvel.data.HeroProvider
 import com.reditum.marvel.ui.theme.DefaultThemeColor
 import com.reditum.marvel.ui.theme.MarvelTheme
 import com.reditum.marvel.ui.theme.Sizes.heroCardWidth
+import com.reditum.marvel.ui.theme.Sizes.heroListContentPadding
 import com.reditum.marvel.ui.theme.Sizes.listSpacing
 import com.reditum.marvel.ui.theme.Sizes.mediumPadding
 import com.reditum.marvel.ui.theme.Sizes.roundedShapeClipping
@@ -68,7 +68,7 @@ fun HeroList(
         state = state,
         flingBehavior = fling,
         horizontalArrangement = Arrangement.spacedBy(listSpacing),
-        contentPadding = PaddingValues(horizontal = 46.dp),
+        contentPadding = PaddingValues(horizontal = heroListContentPadding),
         modifier = modifier.fillMaxSize(),
     ) {
         itemsIndexed(heroes) { idx, hero ->
@@ -106,6 +106,7 @@ fun HeroList(
                             scaleY = scale
                         }
                     }
+                    .clip(RoundedCornerShape(roundedShapeClipping))
                     .clickable {
                         if (centerIdx != idx) {
                             onColorChange(hero.colors!!.primary)
@@ -121,7 +122,7 @@ fun HeroList(
 fun HeroCard(hero: Character, modifier: Modifier = Modifier) {
     Box(
         contentAlignment = Alignment.BottomStart,
-        modifier = modifier.clip(RoundedCornerShape(roundedShapeClipping))
+        modifier = modifier
     ) {
         AsyncImage(
             model = hero.url,

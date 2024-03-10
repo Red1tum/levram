@@ -29,6 +29,8 @@ import androidx.navigation.NavController
 import com.reditum.marvel.R
 import com.reditum.marvel.data.HeroProvider
 import com.reditum.marvel.ui.components.HeroList
+import com.reditum.marvel.ui.components.shimmer.HeroListPlaceholder
+import com.reditum.marvel.ui.components.shimmer.ShimmerHost
 import com.reditum.marvel.ui.theme.Sizes.listSpacing
 import com.reditum.marvel.ui.theme.Sizes.logoWidth
 import com.reditum.marvel.ui.theme.Sizes.mediumPadding
@@ -81,12 +83,18 @@ fun HomeScreen(navController: NavController, setColor: (Color) -> Unit) {
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(bottom = mediumPadding)
             )
-            HeroList(
-                heroes,
-                onColorChange = setColor,
-                onHeroClicked = { id: Int -> navController.navigate("hero/${id}") },
-                modifier = Modifier.navigationBarsPadding()
-            )
+            if (heroes.first().colors != null) {
+                HeroList(
+                    heroes,
+                    onColorChange = setColor,
+                    onHeroClicked = { id: Int -> navController.navigate("hero/${id}") },
+                    modifier = Modifier.navigationBarsPadding()
+                )
+            } else {
+                ShimmerHost {
+                    HeroListPlaceholder(Modifier.navigationBarsPadding())
+                }
+            }
         }
     }
 }

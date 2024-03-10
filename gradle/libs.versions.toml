@@ -25,5 +25,7 @@ compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling
 materialKolor = { module = "com.materialkolor:material-kolor", version.ref = "materialKolor" }
 material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 
+shimmer = { group = "com.valentinilk.shimmer", name = "compose-shimmer", version = "1.2.0" }
+
 junit = { group = "junit", name = "junit", version = "4.13.2" }
 palette-ktx = { group = "androidx.palette", name = "palette-ktx", version.ref = "paletteKtx" }

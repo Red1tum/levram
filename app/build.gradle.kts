@@ -66,5 +66,7 @@ dependencies {
 
     implementation(libs.coil)
 
+    implementation(libs.shimmer)
+
     testImplementation(libs.junit)
 }
