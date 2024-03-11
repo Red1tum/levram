@@ -13,6 +13,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.tooling.preview.Preview
+import com.reditum.marvel.ui.theme.MarvelTheme
 import com.reditum.marvel.ui.theme.Sizes
 import com.reditum.marvel.ui.theme.Sizes.heroListContentPadding
 
@@ -40,4 +42,12 @@ fun HeroCardPlaceHolder(modifier: Modifier = Modifier) {
             .clip(RoundedCornerShape(Sizes.roundedShapeClipping))
             .background(MaterialTheme.colorScheme.onSurface)
     )
+}
+
+@Preview
+@Composable
+fun HeroListPlaceholderPreview() {
+    MarvelTheme {
+        HeroListPlaceholder()
+    }
 }

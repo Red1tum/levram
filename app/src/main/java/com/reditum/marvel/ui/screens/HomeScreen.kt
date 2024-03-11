@@ -6,9 +6,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -22,39 +21,33 @@ import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.reditum.marvel.R
-import com.reditum.marvel.data.HeroProvider
+import com.reditum.marvel.ui.components.ErrorBox
 import com.reditum.marvel.ui.components.HeroList
 import com.reditum.marvel.ui.components.shimmer.HeroListPlaceholder
 import com.reditum.marvel.ui.components.shimmer.ShimmerHost
 import com.reditum.marvel.ui.theme.Sizes.listSpacing
 import com.reditum.marvel.ui.theme.Sizes.logoWidth
 import com.reditum.marvel.ui.theme.Sizes.mediumPadding
-import com.reditum.marvel.ui.theme.getNetworkImageColor
-import com.reditum.marvel.ui.theme.getPrimaryColors
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.withContext
+import com.reditum.marvel.viewmodels.HomeViewModel
 
 @Composable
-fun HomeScreen(navController: NavController, setColor: (Color) -> Unit) {
-    val context = LocalContext.current
-    val heroes by HeroProvider.getHeroes().collectAsState()
-
+fun HomeScreen(
+    navController: NavController,
+    setColor: (Color) -> Unit,
+    viewmodel: HomeViewModel = viewModel()
+) {
+    val heroes by viewmodel.heroes.collectAsState()
+    val hasErrored = viewmodel.errored
     val isDark = isSystemInDarkTheme()
 
     LaunchedEffect(isDark) {
-        withContext(Dispatchers.IO) {
-            HeroProvider.getHeroes().update {
-                it.map { char ->
-                    val color = getNetworkImageColor(context, char.url)
-                    char.copy(colors = getPrimaryColors(color, isDark))
-                }
-            }
+        if (heroes.isNotEmpty()) {
+            viewmodel.updateColors(isDark)
         }
     }
 
@@ -65,7 +58,7 @@ fun HomeScreen(navController: NavController, setColor: (Color) -> Unit) {
                 contentScale = ContentScale.FillBounds,
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
             )
-            .statusBarsPadding()
+            .safeDrawingPadding()
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -83,19 +76,26 @@ fun HomeScreen(navController: NavController, setColor: (Color) -> Unit) {
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(bottom = mediumPadding)
             )
-            if (heroes.first().colors != null) {
+            // Maybe use loading states here?
+            if (heroes.isNotEmpty()) {
                 HeroList(
                     heroes,
                     onColorChange = setColor,
                     onHeroClicked = { id: Int -> navController.navigate("hero/${id}") },
-                    modifier = Modifier.navigationBarsPadding()
+                    loadMore = { viewmodel.load() },
+                    modifier = Modifier
                 )
-            } else {
+            } else if (!hasErrored) {
                 // The first load of app is slow (very optimized api, marvel)
                 // so shimmer was added for user to understand that app is doing some work
                 ShimmerHost {
-                    HeroListPlaceholder(Modifier.navigationBarsPadding())
+                    HeroListPlaceholder()
                 }
+            } else {
+                ErrorBox(
+                    tryAgain = { viewmodel.load() },
+                    modifier = Modifier.fillMaxSize()
+                )
             }
         }
     }

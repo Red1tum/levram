@@ -2,4 +2,6 @@
 <resources>
     <string name="app_name">Marvel</string>
     <string name="choose_hero">Выбери своего героя</string>
+    <string name="couldnt_get_information">Не удалось получить информацию</string>
+    <string name="try_again">Попробовать снова</string>
 </resources>

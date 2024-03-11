@@ -53,6 +53,7 @@ fun Configuration.isDark(): Boolean {
 }
 
 data class PrimaryColors(
+    val color: Color,
     val primary: Color,
     val onPrimary: Color,
 )
@@ -63,9 +64,11 @@ fun getPrimaryColors(color: Color, darkTheme: Boolean = true): PrimaryColors {
     val chroma = hct.chroma
     val a1 = TonalPalette.fromHueAndChroma(hue, max(48.0, chroma))
     return if (darkTheme) PrimaryColors(
+        color,
         Color(a1.tone(30)),
         Color(a1.tone(90))
     ) else PrimaryColors(
+        color,
         Color(a1.tone(90)),
         Color(a1.tone(10))
     )

@@ -62,9 +62,8 @@ class MainActivity : ComponentActivity() {
                                         type = NavType.StringType
                                     }
                                 )
-                            ) { backStackEntry ->
-                                val heroId = backStackEntry.arguments?.getString("id")!!.toInt()
-                                HeroScreen(navController, heroId)
+                            ) {
+                                HeroScreen(navController)
                             }
                         }
                     }

@@ -20,7 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -33,12 +32,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.AsyncImage
 import com.reditum.marvel.data.Character
-import com.reditum.marvel.data.HeroProvider
 import com.reditum.marvel.ui.theme.DefaultThemeColor
-import com.reditum.marvel.ui.theme.MarvelTheme
 import com.reditum.marvel.ui.theme.Sizes.heroCardWidth
 import com.reditum.marvel.ui.theme.Sizes.heroListContentPadding
 import com.reditum.marvel.ui.theme.Sizes.listSpacing
@@ -52,6 +48,7 @@ fun HeroList(
     heroes: List<Character>,
     onColorChange: (Color) -> Unit,
     onHeroClicked: (Int) -> Unit,
+    loadMore: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val state = rememberLazyListState()
@@ -62,6 +59,9 @@ fun HeroList(
     LaunchedEffect(centerIdx, heroes) {
         val color = heroes.getOrNull(centerIdx)?.colors?.primary ?: DefaultThemeColor
         onColorChange(color)
+        if (centerIdx > heroes.size - 3) {
+            loadMore()
+        }
     }
 
     LazyRow(
@@ -125,7 +125,7 @@ fun HeroCard(hero: Character, modifier: Modifier = Modifier) {
         modifier = modifier
     ) {
         AsyncImage(
-            model = hero.url,
+            model = hero.thumbnail.getUrl(),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
@@ -141,14 +141,5 @@ fun HeroCard(hero: Character, modifier: Modifier = Modifier) {
                 .clip(RoundedCornerShape(roundedShapeClipping))
                 .background(hero.colors?.primary ?: Color.Transparent)
         )
-    }
-}
-
-@Preview
-@Composable
-fun HeroListPreview() {
-    val heroes = HeroProvider.getHeroes().collectAsState().value
-    MarvelTheme {
-        HeroList(heroes = heroes, onColorChange = {}, onHeroClicked = {})
     }
 }
