@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -38,6 +40,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -64,9 +67,17 @@ dependencies {
     implementation(libs.palette.ktx)
     implementation(libs.materialKolor)
 
+    implementation(libs.viewmodel)
+    implementation(libs.viewmodel.compose)
+
     implementation(libs.coil)
 
     implementation(libs.shimmer)
+
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.json)
 
     testImplementation(libs.junit)
 }
