@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
@@ -28,6 +29,7 @@ import androidx.navigation.NavController
 import com.reditum.marvel.R
 import com.reditum.marvel.ui.components.ErrorBox
 import com.reditum.marvel.ui.components.HeroList
+import com.reditum.marvel.ui.components.shimmer.HeroCardPlaceHolder
 import com.reditum.marvel.ui.components.shimmer.HeroListPlaceholder
 import com.reditum.marvel.ui.components.shimmer.ShimmerHost
 import com.reditum.marvel.ui.theme.Sizes.listSpacing
@@ -43,6 +45,7 @@ fun HomeScreen(
 ) {
     val heroes by viewmodel.heroes.collectAsState()
     val hasErrored = viewmodel.errored
+    val hasErrored by viewmodel.errored.collectAsState()
     val isDark = isSystemInDarkTheme()
 
     LaunchedEffect(isDark) {
@@ -76,13 +79,26 @@ fun HomeScreen(
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(bottom = mediumPadding)
             )
-            // Maybe use loading states here?
             if (heroes.isNotEmpty()) {
                 HeroList(
                     heroes,
                     onColorChange = setColor,
                     onHeroClicked = { id: Int -> navController.navigate("hero/${id}") },
                     loadMore = { viewmodel.load() },
+                    loadingItem = {
+                        if (hasErrored) {
+                            HeroCardPlaceHolder(Modifier.scale(0.9f)) {
+                                ErrorBox(
+                                    tryAgain = { viewmodel.load() },
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            }
+                        } else {
+                            ShimmerHost {
+                                HeroCardPlaceHolder(Modifier.scale(0.9f))
+                            }
+                        }
+                    },
                     modifier = Modifier
                 )
             } else if (!hasErrored) {

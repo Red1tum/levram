@@ -25,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,6 +41,7 @@ import com.reditum.marvel.ui.theme.Sizes.heroListContentPadding
 import com.reditum.marvel.ui.theme.Sizes.listSpacing
 import com.reditum.marvel.ui.theme.Sizes.mediumPadding
 import com.reditum.marvel.ui.theme.Sizes.roundedShapeClipping
+import kotlinx.coroutines.flow.collectLatest
 import kotlin.math.abs
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -49,6 +51,7 @@ fun HeroList(
     onColorChange: (Color) -> Unit,
     onHeroClicked: (Int) -> Unit,
     loadMore: () -> Unit,
+    loadingItem: @Composable () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val state = rememberLazyListState()
@@ -56,12 +59,22 @@ fun HeroList(
 
     var centerIdx by remember { mutableIntStateOf(0) }
 
-    LaunchedEffect(centerIdx, heroes) {
-        val color = heroes.getOrNull(centerIdx)?.colors?.primary ?: DefaultThemeColor
-        onColorChange(color)
-        if (centerIdx > heroes.size - 3) {
+    LaunchedEffect(state, heroes) {
+        snapshotFlow {
+            state.layoutInfo.visibleItemsInfo.any { it.key == "loading" }
+        }.collectLatest { shouldLoadMore ->
+            if (!shouldLoadMore) return@collectLatest
             loadMore()
+            if (state.firstVisibleItemIndex >= heroes.size - 1) {
+                state.animateScrollToItem(heroes.size - 1)
+            }
         }
+    }
+
+    LaunchedEffect(centerIdx, heroes) {
+        val hero = heroes.getOrNull(centerIdx)
+        val color = if (hero != null) Color(hero.thumbnailColor) else DefaultThemeColor
+        onColorChange(color)
     }
 
     LazyRow(
@@ -114,6 +127,9 @@ fun HeroList(
                         onHeroClicked(hero.id)
                     }
             )
+        }
+        item(key = "loading") {
+            loadingItem()
         }
     }
 }

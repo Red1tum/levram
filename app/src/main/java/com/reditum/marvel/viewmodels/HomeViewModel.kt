@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
     val heroes = MutableStateFlow<List<Character>>(emptyList())
     var errored by mutableStateOf(false)
+    var errored = MutableStateFlow(false)
 
     private var offset = 0
 
@@ -36,7 +37,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun load() {
-        errored = false
+        errored.value = false
         viewModelScope.launch(Dispatchers.IO) {
             val context = getApplication<Application>().applicationContext
             val isDark = context.resources.configuration.isDark()
@@ -52,7 +53,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                     }
                     offset += REQUEST_LIMIT
                 }.onFailure {
-                    errored = true
+                    errored.value = true
                     Log.e("HomeViewModel", it.toString())
                 }
         }

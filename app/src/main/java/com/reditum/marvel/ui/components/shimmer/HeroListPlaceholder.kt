@@ -2,8 +2,8 @@ package com.reditum.marvel.ui.components.shimmer
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -34,14 +34,19 @@ fun HeroListPlaceholder(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun HeroCardPlaceHolder(modifier: Modifier = Modifier) {
-    Spacer(
+fun HeroCardPlaceHolder(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit = {},
+) {
+    Box(
         modifier
             .width(Sizes.heroCardWidth)
             .fillMaxHeight()
             .clip(RoundedCornerShape(Sizes.roundedShapeClipping))
             .background(MaterialTheme.colorScheme.onSurface)
-    )
+    ) {
+        content()
+    }
 }
 
 @Preview
