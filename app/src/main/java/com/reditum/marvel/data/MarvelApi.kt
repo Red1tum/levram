@@ -82,6 +82,7 @@ object MarvelApi {
         val res = client.get("characters") {
             parameter("limit", REQUEST_LIMIT)
             parameter("offset", offset)
+            parameter("orderBy", "name")
         }.body<MarvelResponse>()
 
         res.data.results.filter { !it.thumbnail.path.endsWith(NOT_AVAILABLE) }
