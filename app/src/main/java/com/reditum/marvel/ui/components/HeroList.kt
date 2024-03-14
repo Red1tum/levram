@@ -34,7 +34,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import coil.compose.AsyncImage
-import com.reditum.marvel.data.Character
+import com.reditum.marvel.db.entities.CharacterEntity
 import com.reditum.marvel.ui.theme.DefaultThemeColor
 import com.reditum.marvel.ui.theme.Sizes.heroCardWidth
 import com.reditum.marvel.ui.theme.Sizes.heroListContentPadding
@@ -47,7 +47,7 @@ import kotlin.math.abs
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HeroList(
-    heroes: List<Character>,
+    heroes: List<CharacterEntity>,
     onColorChange: (Color) -> Unit,
     onHeroClicked: (Int) -> Unit,
     loadMore: () -> Unit,
@@ -122,7 +122,7 @@ fun HeroList(
                     .clip(RoundedCornerShape(roundedShapeClipping))
                     .clickable {
                         if (centerIdx != idx) {
-                            onColorChange(hero.colors!!.primary)
+                            onColorChange(hero.primaryColors!!.primary)
                         }
                         onHeroClicked(hero.id)
                     }
@@ -135,13 +135,13 @@ fun HeroList(
 }
 
 @Composable
-fun HeroCard(hero: Character, modifier: Modifier = Modifier) {
+fun HeroCard(hero: CharacterEntity, modifier: Modifier = Modifier) {
     Box(
         contentAlignment = Alignment.BottomStart,
         modifier = modifier
     ) {
         AsyncImage(
-            model = hero.thumbnail.getUrl(),
+            model = hero.thumbnailUrl,
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
@@ -149,13 +149,13 @@ fun HeroCard(hero: Character, modifier: Modifier = Modifier) {
         Text(
             hero.name,
             style = MaterialTheme.typography.titleMedium,
-            color = hero.colors?.onPrimary ?: Color.White,
+            color = hero.primaryColors?.onPrimary ?: Color.White,
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(mediumPadding)
                 .clip(RoundedCornerShape(roundedShapeClipping))
-                .background(hero.colors?.primary ?: Color.Transparent)
+                .background(hero.primaryColors?.primary ?: Color.Transparent)
         )
     }
 }

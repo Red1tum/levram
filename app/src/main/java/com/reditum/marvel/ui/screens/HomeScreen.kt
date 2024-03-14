@@ -24,7 +24,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.reditum.marvel.R
 import com.reditum.marvel.ui.components.ErrorBox
@@ -41,10 +41,9 @@ import com.reditum.marvel.viewmodels.HomeViewModel
 fun HomeScreen(
     navController: NavController,
     setColor: (Color) -> Unit,
-    viewmodel: HomeViewModel = viewModel()
+    viewmodel: HomeViewModel = hiltViewModel()
 ) {
-    val heroes by viewmodel.heroes.collectAsState()
-    val hasErrored = viewmodel.errored
+    val heroes by viewmodel.characters.collectAsState()
     val hasErrored by viewmodel.errored.collectAsState()
     val isDark = isSystemInDarkTheme()
 

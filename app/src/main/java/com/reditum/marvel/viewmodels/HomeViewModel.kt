@@ -1,57 +1,71 @@
 package com.reditum.marvel.viewmodels
 
-import android.app.Application
+import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
+import androidx.compose.ui.graphics.toArgb
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.reditum.marvel.data.Character
 import com.reditum.marvel.data.MarvelApi
 import com.reditum.marvel.data.REQUEST_LIMIT
+import com.reditum.marvel.db.CharacterDatabase
+import com.reditum.marvel.db.entities.CharacterEntity
+import com.reditum.marvel.db.entities.OffsetEntity
 import com.reditum.marvel.ui.theme.getNetworkImageColor
 import com.reditum.marvel.ui.theme.getPrimaryColors
 import com.reditum.marvel.ui.theme.isDark
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel(application: Application) : AndroidViewModel(application) {
-    val heroes = MutableStateFlow<List<Character>>(emptyList())
-    var errored by mutableStateOf(false)
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    val db: CharacterDatabase,
+    @ApplicationContext val context: Context,
+) : ViewModel() {
     var errored = MutableStateFlow(false)
 
-    private var offset = 0
+    private lateinit var offset: OffsetEntity
+
+    val characters = MutableStateFlow<List<CharacterEntity>>(emptyList())
 
     fun updateColors(isDark: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
-            heroes.value = heroes.value.map { char ->
-                val color = char.colors!!.color
+            characters.value = characters.value.map { char ->
                 char.copy(
-                    colors = getPrimaryColors(color, isDark)
+                    primaryColors = getPrimaryColors(char.thumbnailColor, isDark)
                 )
             }
         }
     }
 
+
     fun load() {
         errored.value = false
         viewModelScope.launch(Dispatchers.IO) {
-            val context = getApplication<Application>().applicationContext
-            val isDark = context.resources.configuration.isDark()
-
-            MarvelApi.getHeroes(offset)
+            MarvelApi.getHeroes(offset.value)
                 .onSuccess { res ->
-                    res.map { char ->
-                        val color = getNetworkImageColor(context, char.thumbnail.getUrl())
-                        char.colors = getPrimaryColors(color, isDark)
+                    offset.value += REQUEST_LIMIT
+                    val isDark = context.resources.configuration.isDark()
+                    val chars = res.map { char ->
+                            val color = getNetworkImageColor(context, char.thumbnail.getUrl()).toArgb()
+                            val entity = CharacterEntity(
+                                char.id,
+                                char.name,
+                                char.description,
+                                char.thumbnail.getUrl(),
+                                color,
+                                getPrimaryColors(color, isDark)
+                            )
+                            entity
                     }
-                    heroes.update {
-                        heroes.value + res
+                    characters.value += chars
+                    db.transaction {
+                        chars.onEach(db::upsert)
+                        db.upsert(offset)
                     }
-                    offset += REQUEST_LIMIT
                 }.onFailure {
                     errored.value = true
                     Log.e("HomeViewModel", it.toString())
@@ -60,6 +74,26 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     init {
-        load()
+        viewModelScope.launch(Dispatchers.IO) {
+            // not ideal, but I haven't fully grasped
+            // db preseeding so keeping it as is
+            offset = if (db.isOffsetNotEmpty() == 0) {
+                OffsetEntity(value = 0)
+            } else {
+                db.offset()
+            }
+
+            val chars = db.characterList()
+            if (chars.isNotEmpty()) {
+                val isDark = context.resources.configuration.isDark()
+                characters.value = chars.map {
+                    it.primaryColors = getPrimaryColors(it.thumbnailColor, isDark)
+                    it
+                }
+            } else {
+                load()
+            }
+        }
+
     }
 }

@@ -23,7 +23,9 @@ import com.reditum.marvel.ui.theme.ColorSaver
 import com.reditum.marvel.ui.theme.DefaultThemeColor
 import com.reditum.marvel.ui.theme.MarvelTheme
 import com.valentinilk.shimmer.LocalShimmerTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

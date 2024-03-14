@@ -22,10 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.reditum.marvel.ui.components.ErrorBox
 import com.reditum.marvel.ui.theme.Sizes.mediumPadding
 import com.reditum.marvel.ui.theme.Sizes.roundedShapeClipping
 import com.reditum.marvel.viewmodels.HeroViewModel
@@ -33,15 +32,14 @@ import com.reditum.marvel.viewmodels.HeroViewModel
 @Composable
 fun HeroScreen(
     navController: NavController,
-    viewmodel: HeroViewModel = viewModel()
+    viewmodel: HeroViewModel = hiltViewModel()
 ) {
     val hero by viewmodel.hero.collectAsState()
-    val hasErrored = viewmodel.errored
 
     Box(modifier = Modifier) {
         hero?.let { hero ->
             AsyncImage(
-                model = hero.thumbnail.getUrl(),
+                model = hero.thumbnailUrl,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
@@ -83,13 +81,6 @@ fun HeroScreen(
                     }
                 }
             }
-        }
-
-        if (hasErrored) {
-            ErrorBox(
-                tryAgain = { viewmodel.load() },
-                modifier = Modifier.fillMaxSize()
-            )
         }
     }
 }

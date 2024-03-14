@@ -1,38 +1,28 @@
 package com.reditum.marvel.viewmodels
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.reditum.marvel.data.Character
-import com.reditum.marvel.data.MarvelApi
+import com.reditum.marvel.db.CharacterDatabase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
-class HeroViewModel(
+@HiltViewModel
+class HeroViewModel @Inject constructor(
+    db: CharacterDatabase,
     savedStateHandle: SavedStateHandle
-) : ViewModel() {
-    val hero = MutableStateFlow<Character?>(null)
-    var errored by mutableStateOf(false)
+) : ViewModel(){
 
-    val heroId = savedStateHandle.get<String>("id")!!.toInt()
+    private val heroId = savedStateHandle.get<String>("id")!!.toInt()
 
-    fun load() {
-        errored = false
-        viewModelScope.launch(Dispatchers.IO) {
-            MarvelApi.getHero(heroId)
-                .onSuccess { char ->
-                    hero.value = char
-                }.onFailure {
-                    errored = true
-                }
-        }
-    }
-
-    init {
-        load()
-    }
+    // removed load from network because the info
+    // we get from characters endpoint is identical to characters/id
+    // and if user sees character, then we already have his info in db
+    val hero = db.character(heroId)
+        .flowOn(Dispatchers.IO)
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 }
