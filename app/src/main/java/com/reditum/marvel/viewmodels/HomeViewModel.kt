@@ -86,9 +86,8 @@ class HomeViewModel @Inject constructor(
             val chars = db.characterList()
             if (chars.isNotEmpty()) {
                 val isDark = context.resources.configuration.isDark()
-                characters.value = chars.map {
+                characters.value = chars.onEach {
                     it.primaryColors = getPrimaryColors(it.thumbnailColor, isDark)
-                    it
                 }
             } else {
                 load()
