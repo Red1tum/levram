@@ -46,6 +46,9 @@ out/
 # Log Files
 *.log
 
+#google services
+google-services.json
+
 # Android Studio Navigation editor temp files
 .navigation/
 

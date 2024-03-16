@@ -3,8 +3,10 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("com.google.devtools.ksp")
+
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.hilt.plugin)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -94,6 +96,9 @@ dependencies {
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.messaging)
 
     testImplementation(libs.junit)
 }
