@@ -24,6 +24,9 @@ captures
 # Comment next line if keeping position of elements in Navigation Editor is relevant for you
 .idea/navEditor.xml
 
+release/
+libs/
+
 output.json
 output-metadata.json
 *.apk
@@ -42,6 +45,9 @@ out/
 
 # Log Files
 *.log
+
+#google services
+google-services.json
 
 # Android Studio Navigation editor temp files
 .navigation/
