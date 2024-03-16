@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">Marvel</string>
+    <string name="app_name" translatable="false">Marvel</string>
     <string name="choose_hero">Choose your hero</string>
     <string name="couldnt_get_information">Couldn\'t get information</string>
     <string name="try_again">Try again</string>
+    <string name="hero_notifications">Hero notifications</string>
+    <string name="default_notification_channel_id" translatable="false">levram</string>
 </resources>
