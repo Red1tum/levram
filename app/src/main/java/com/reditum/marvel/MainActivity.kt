@@ -65,7 +65,7 @@ class MainActivity : ComponentActivity() {
                                     }
                                 )
                             ) {
-                                HeroScreen(navController)
+                                HeroScreen(navController, setThemeColor)
                             }
                         }
                     }
