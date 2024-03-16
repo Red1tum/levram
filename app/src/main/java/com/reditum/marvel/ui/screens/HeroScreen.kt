@@ -17,8 +17,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
@@ -28,8 +30,12 @@ import com.reditum.marvel.ui.theme.Sizes.mediumPadding
 import com.reditum.marvel.ui.theme.Sizes.roundedShapeClipping
 
 @Composable
-fun HeroScreen(navController: NavController, heroId: Int) {
+fun HeroScreen(navController: NavController, setColor: (Color) -> Unit, heroId: Int) {
     val hero = HeroProvider.getHero(heroId)
+
+    LaunchedEffect(hero) {
+        setColor(hero.colors!!.color)
+    }
 
     Box(modifier = Modifier) {
         AsyncImage(
