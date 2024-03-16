@@ -44,7 +44,6 @@ fun HomeScreen(
     viewmodel: HomeViewModel = viewModel()
 ) {
     val heroes by viewmodel.heroes.collectAsState()
-    val hasErrored = viewmodel.errored
     val hasErrored by viewmodel.errored.collectAsState()
     val isDark = isSystemInDarkTheme()
 
