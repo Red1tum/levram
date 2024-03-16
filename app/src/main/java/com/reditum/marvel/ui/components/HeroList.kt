@@ -73,7 +73,7 @@ fun HeroList(
 
     LaunchedEffect(centerIdx, heroes) {
         val hero = heroes.getOrNull(centerIdx)
-        val color = if (hero != null) Color(hero.thumbnailColor) else DefaultThemeColor
+        val color = if (hero != null) hero.colors!!.color else DefaultThemeColor
         onColorChange(color)
     }
 
