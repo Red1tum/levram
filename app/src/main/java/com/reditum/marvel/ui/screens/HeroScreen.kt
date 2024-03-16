@@ -18,8 +18,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -33,10 +35,15 @@ import com.reditum.marvel.viewmodels.HeroViewModel
 @Composable
 fun HeroScreen(
     navController: NavController,
+    setColor: (Color) -> Unit,
     viewmodel: HeroViewModel = viewModel()
 ) {
     val hero by viewmodel.hero.collectAsState()
     val hasErrored = viewmodel.errored
+
+    LaunchedEffect(hero) {
+        setColor(hero?.colors!!.color)
+    }
 
     Box(modifier = Modifier) {
         hero?.let { hero ->
