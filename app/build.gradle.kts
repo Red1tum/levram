@@ -53,12 +53,20 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.activity)
+    implementation(libs.navigation)
+
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.graphics)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.material3)
     implementation(libs.compose.ui.tooling)
 
-    implementation(libs.navigation)
+    implementation(libs.palette.ktx)
+    implementation(libs.materialKolor)
+
+    implementation(libs.coil)
+
+    implementation(libs.shimmer)
+
     testImplementation(libs.junit)
 }
