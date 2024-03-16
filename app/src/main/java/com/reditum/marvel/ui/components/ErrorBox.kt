@@ -26,7 +26,10 @@ fun ErrorBox(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
     ) {
-        Text(stringResource(R.string.couldnt_get_information), color = MaterialTheme.colorScheme.surface)
+        Text(
+            stringResource(R.string.couldnt_get_information),
+            color = MaterialTheme.colorScheme.surface
+        )
         Button(
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.errorContainer,

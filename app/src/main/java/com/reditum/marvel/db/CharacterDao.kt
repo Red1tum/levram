@@ -20,7 +20,7 @@ interface CharacterDao {
     fun characterList(): List<CharacterEntity>
 
     @Query("SELECT * FROM character WHERE id = :id")
-    fun character(id: Int): Flow<CharacterEntity>
+    fun character(id: Int): CharacterEntity?
 
     @Query("SELECT EXISTS (SELECT 1 FROM `offset`)")
     fun isOffsetNotEmpty(): Int

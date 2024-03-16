@@ -10,7 +10,7 @@ import com.reditum.marvel.db.entities.OffsetEntity
 
 class CharacterDatabase(
     private val delegate: InternalDatabase
-): CharacterDao by delegate.characterDao() {
+) : CharacterDao by delegate.characterDao() {
     val openHelper: SupportSQLiteOpenHelper
         get() = delegate.openHelper
 

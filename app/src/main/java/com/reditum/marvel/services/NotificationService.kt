@@ -72,7 +72,11 @@ class NotificationService : FirebaseMessagingService() {
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(CHANNEL_ID, getString(R.string.hero_notifications), NotificationManager.IMPORTANCE_HIGH)
+            val channel = NotificationChannel(
+                CHANNEL_ID,
+                getString(R.string.hero_notifications),
+                NotificationManager.IMPORTANCE_HIGH
+            )
             notificationManager.createNotificationChannel(channel)
         }
 
@@ -111,7 +115,12 @@ class NotificationService : FirebaseMessagingService() {
             }
 
             Constants.MessageTypes.DELETED -> onDeletedMessages()
-            Constants.MessageTypes.SEND_EVENT -> onMessageSent(intent.getStringExtra(MessagePayloadKeys.MSGID)!!)
+            Constants.MessageTypes.SEND_EVENT -> onMessageSent(
+                intent.getStringExtra(
+                    MessagePayloadKeys.MSGID
+                )!!
+            )
+
             Constants.MessageTypes.SEND_ERROR -> onSendError(
                 getMessageId(intent)!!,
                 Exception(intent.getStringExtra(Constants.IPC_BUNDLE_KEY_SEND_ERROR))

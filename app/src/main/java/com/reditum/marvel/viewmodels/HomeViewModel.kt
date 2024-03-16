@@ -50,16 +50,16 @@ class HomeViewModel @Inject constructor(
                     offset.value += REQUEST_LIMIT
                     val isDark = context.resources.configuration.isDark()
                     val chars = res.map { char ->
-                            val color = getNetworkImageColor(context, char.thumbnail.getUrl()).toArgb()
-                            val entity = CharacterEntity(
-                                char.id,
-                                char.name,
-                                char.description,
-                                char.thumbnail.getUrl(),
-                                color,
-                                getPrimaryColors(color, isDark)
-                            )
-                            entity
+                        val color = getNetworkImageColor(context, char.thumbnail.getUrl()).toArgb()
+                        val entity = CharacterEntity(
+                            char.id,
+                            char.name,
+                            char.description,
+                            char.thumbnail.getUrl(),
+                            color,
+                            getPrimaryColors(color, isDark)
+                        )
+                        entity
                     }
                     characters.value += chars
                     db.transaction {
