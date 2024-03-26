@@ -42,7 +42,9 @@ fun HeroScreen(
     val hasErrored = viewmodel.errored
 
     LaunchedEffect(hero) {
-        setColor(hero?.colors!!.color)
+        hero?.colors?.color?.let {
+            setColor(it)
+        }
     }
 
     Box(modifier = Modifier) {
